@@ -17,9 +17,14 @@ namespace strPARK {
 		MyString(const MyString& other);
 
 		int getUsed() const;
+		void print() const;
+		void println() const;
+		MyString& subStr(int start, int end);
+
 		MyString& concatStr(const MyString& right);		
 //		MyString& operator + (const MyString& right);
-		MyString& subStr(int start, int end);
+		MyString& assign(MyString& right);
+//		MyString& operator = (MyString& right);
 		bool operator == (const MyString& right) const;
 		bool operator != (const MyString& right) const;
 		bool operator > (const MyString& right) const;
