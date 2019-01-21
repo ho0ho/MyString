@@ -27,6 +27,7 @@ namespace strPARK {
 	}
 
 	int MyString::getUsed() const { return used; }
+	int MyString::getCapacity() const { return capacity; }
 
 	void MyString::print() const {
 		for (int i = 0; i < used; i++) {
@@ -49,7 +50,31 @@ namespace strPARK {
 		content.substr(start, num);
 
 	}
-	
+
+	MyString& MyString::assign(const MyString& right) {
+		if (capacity < right.capacity) {
+			delete[] content;
+			capacity = right.capacity;
+			content = new char[capacity];
+		}
+
+		used = right.used;
+		for (int i = 0; i < used; i++) {
+			content[i] = right.content[i];
+		}
+
+		return *this;
+	}
+
+	MyString& MyString::operator = (const MyString& right) {
+		if (*this == right) {
+			return *this;
+		}
+
+		assign(right);
+	}
+
+
 
 
 	MyString::~MyString() {

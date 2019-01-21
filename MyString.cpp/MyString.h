@@ -13,18 +13,19 @@ namespace strPARK {
 	public:
 		MyString(int size = 50);
 		MyString(char c);
-		MyString(const char *str);
+		MyString(const char *c_str);
 		MyString(const MyString& other);
 
 		int getUsed() const;
+		int getCapacity() const;
 		void print() const;
 		void println() const;
 		MyString& subStr(int start, int end);
 
 		MyString& concatStr(const MyString& right);		
-//		MyString& operator + (const MyString& right);
-		MyString& assign(MyString& right);
-//		MyString& operator = (MyString& right);
+		MyString& operator + (const MyString& right);
+		MyString& assign(const MyString& right);
+		MyString& operator = (const MyString& right);
 		bool operator == (const MyString& right) const;
 		bool operator != (const MyString& right) const;
 		bool operator > (const MyString& right) const;
