@@ -126,7 +126,7 @@ namespace strPARK {
 			if (content[i] > right.content[i]) return true;
 		}
 
-		if (minUsed == used) return true;
+		if (minUsed == right.used) return true;
 		else return false;
 	}
 
@@ -205,6 +205,24 @@ namespace strPARK {
 		used -= num;
 		return *this;
 	}
+
+	int MyString::find(int find_from, const MyString& str) {
+		if (find_from < 0 || find_from >= used) {
+			cout << "error arguments on find()" << endl;
+			exit(1);
+		}
+
+		int i, j;
+		for (i = find_from; i < used - str.used; i++) {
+			for (j = 0; j < str.used; j++) {
+				if (content[i + j] != str.content[j]) break;
+			}
+			if (j == str.used) return i;
+		}
+
+		return -1;		
+	}
+
 
 	MyString::~MyString() {
 		delete[] content;
