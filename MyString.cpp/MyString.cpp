@@ -3,7 +3,7 @@
 using namespace std;
 
 namespace strPARK {
-	MyString::MyString(int size) : capacity(50), used(0) {
+	MyString::MyString(int size) : capacity(size), used(0) {
 		content = new char[capacity];
 	}
 
@@ -12,7 +12,7 @@ namespace strPARK {
 		content[0] = c;
 	}
 
-	MyString::MyString(const char *c_str) : capacity(strlen(c_str)), used(strlen(c_str)+1) {
+	MyString::MyString(const char *c_str) : capacity(strlen(c_str)), used(strlen(c_str) + 1) {
 		content = new char[capacity];
 		for (int i = 0; i < used; i++) {
 			content[i] = c_str[i];
@@ -34,7 +34,7 @@ namespace strPARK {
 			cout << content[i];
 		}
 	}
-	
+
 	void MyString::println() const {
 		print();
 		cout << endl;
@@ -46,12 +46,36 @@ namespace strPARK {
 			exit(1);
 		}
 
-		int num = end - start;
-		content.substr(start, num);
+		MyString newStr(end - start + 1);
+		for (int i = 0; i < end - start; i++)
+			newStr.content[i] = content[start + i];
+		newStr.used = end - start;
+		return newStr;
+	}
 
+	MyString& MyString::concatStr(const MyString& right) {
+		if (capacity < used + right.used) {
+			delete[] content;
+			capacity = used + right.used;
+			content = new char[capacity];
+		}
+
+		used += right.used;
+		for (int i = 0; i < right.used; i++)
+			content[used + i] = right.content[i];
+
+		return *this;
+	}
+
+	MyString& MyString::operator + (const MyString& right) {
+		concatStr(right);
 	}
 
 	MyString& MyString::assign(const MyString& right) {
+		if (*this == right) {
+			return *this;
+		}
+
 		if (capacity < right.capacity) {
 			delete[] content;
 			capacity = right.capacity;
@@ -67,15 +91,56 @@ namespace strPARK {
 	}
 
 	MyString& MyString::operator = (const MyString& right) {
-		if (*this == right) {
-			return *this;
-		}
-
 		assign(right);
 	}
 
+	bool MyString::operator == (const MyString& right) const {
+		size_t i;
+		if (used != right.used) return false;
+		for (i = 0; i < used && content[i] == right.content[i]; i++);
+		return (i == used);
+	}
 
+	bool MyString::operator != (const MyString& right) const {
+		return !(*this == right);
+	}
 
+	bool MyString::operator > (const MyString& right) const {
+		int minUsed = (used > right.used) ? right.used : used;
+
+		int i = -1;
+		while (++i < minUsed) {
+			if (content[i] > right.content[i]) return true;
+		}
+
+		if (minUsed == used) return true;
+		else return false;
+	}
+
+	bool MyString::operator >= (const MyString& right) const {
+		return (*this > right || *this == right);
+	}
+
+	bool MyString::operator < (const MyString& right) const {
+		return !(*this >= right);
+	}
+
+	bool MyString::operator <= (const MyString& right) const {
+		return !(*this > right);
+	}
+
+	char& MyString::at(int index) {
+		if (index < 0 || index >= used) {
+			cout << "error on at()" << endl;
+			exit(1);
+		}
+
+		return content[index];
+	}
+
+	char& MyString::operator [] (int index) {
+		at(index);
+	}
 
 	MyString::~MyString() {
 		delete[] content;
