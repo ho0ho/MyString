@@ -30,6 +30,11 @@ namespace strPARK {
 	int MyString::getCapacity() const { return capacity; }
 
 	void MyString::print() const {
+		if (used == 0) {
+			cout << "empty array" << endl;
+			return;
+		}
+
 		for (int i = 0; i < used; i++) {
 			cout << content[i];
 		}
@@ -63,12 +68,20 @@ namespace strPARK {
 		used += right.used;
 		for (int i = 0; i < right.used; i++)
 			content[used + i] = right.content[i];
-
-		return *this;
+		return *this;			// return (*this = *this + right);
 	}
 
-	MyString& MyString::operator + (const MyString& right) {
-		concatStr(right);
+	const MyString MyString::operator + (const MyString& right) {
+		int sumCapacity = right.used + used;
+		MyString sumStr(sumCapacity);
+		sumStr.used = sumCapacity;
+
+		for (int i = 0; i < used; i++) 
+			sumStr.content[i] = content[i];
+		for (int i = 0; i < right.used; i++) 
+			sumStr.content[used + i] = right.content[i];
+		
+		return sumStr;
 	}
 
 	MyString& MyString::assign(const MyString& right) {
@@ -134,12 +147,63 @@ namespace strPARK {
 			cout << "error on at()" << endl;
 			exit(1);
 		}
-
 		return content[index];
 	}
 
 	char& MyString::operator [] (int index) {
 		at(index);
+	}
+
+	MyString& MyString::insert(int loc, const MyString& str) {
+		if (loc < 0 || loc >= used) {
+			cout << "error: wrong index in insert()" << endl;
+			exit(1);
+		}
+
+		if (capacity < str.used + used) {
+			capacity = str.used + used;
+			char *save = content;
+			content = new char[capacity];
+			for (int i = 0; i < loc; i++) 
+				content[i] = save[i];
+			for (int i = 0; i < str.used; i++)
+				content[i + loc] = str.content[i];
+			for (int i = 0; i < used - loc; i++)
+				content[i + loc + str.used] = save[loc + i];
+			delete[] save;
+			used = capacity;
+		}
+		else {
+			for (int i = used - loc - 1; i >= 0; i--)
+				content[i + loc + str.used] = content[i + loc];
+			for (int i = 0; i < str.used; i++)
+				content[i + loc] = str.content[i];
+			used += str.used;
+		}
+		return *this;
+	}
+
+	MyString& MyString::insert(int loc, const char *c_str) {
+		MyString str(c_str);
+		return insert(loc, str);
+	}
+
+	MyString& MyString::insert(int loc, char c) {
+		MyString str(c);
+		return insert(loc, str);
+	}
+
+	MyString& MyString::erase(size_t loc, size_t num) {
+		if (loc >= used || num >= used) {
+			cout << "error arguments in erase()" << endl;
+			exit(1);
+		}
+
+		for (int i = 0; i < num; i++)
+			content[i + loc] = content[i + num];
+
+		used -= num;
+		return *this;
 	}
 
 	MyString::~MyString() {
