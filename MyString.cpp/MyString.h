@@ -20,11 +20,11 @@ namespace strPARK {
 		int getCapacity() const;
 		void print() const;
 		void println() const;
-		MyString& subStr(int start, int end);
+		const MyString subStr(int start, int end);
 
-		MyString& concatStr(const MyString& right);		
-		MyString& operator + (const MyString& right);
-		MyString& assign(const MyString& right);
+//		MyString& concatStr(const MyString& right);		
+		const MyString operator + (const MyString& right);
+//		MyString& assign(const MyString& right);
 		MyString& operator = (const MyString& right);
 		bool operator == (const MyString& right) const;
 		bool operator != (const MyString& right) const;
@@ -32,6 +32,18 @@ namespace strPARK {
 		bool operator < (const MyString& right) const;
 		bool operator >= (const MyString& right) const;
 		bool operator <= (const MyString& right) const;
+		char& at(int index);
+		char& operator [] (int index);
+
+		MyString& insert(int loc, const MyString& str);
+		MyString& insert(int loc, const char *c_str);
+		MyString& insert(int loc, char c);
+
+		MyString& erase(int loc, int num);
+
+		int find(int find_from, const MyString& str);
+		int find(int find_from, const char *c_str);
+		int find(int find_from, char c);
 
 		virtual ~MyString();
 	};
