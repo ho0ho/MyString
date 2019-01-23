@@ -29,20 +29,6 @@ namespace strPARK {
 	int MyString::getUsed() const { return used; }
 	int MyString::getCapacity() const { return capacity; }
 
-	void MyString::print() const {
-		if (used == 0) {
-			cout << "empty array";
-			return;
-		}
-		for (int i = 0; i < used; i++) {
-			cout << content[i];
-		}
-	}
-
-	void MyString::println() const {
-		print();
-		cout << endl;
-	}
 	// const리턴: 외부로 반환되어야 하는 newStr가 지역적으로 선언되어있기 때문에 &없이, 즉 리턴될 때 복사되어야 함
 	const MyString MyString::subStr(int start, int end) {	// start <= i < end
 		if (start < 0 || end > used && start >= end) {
@@ -57,6 +43,7 @@ namespace strPARK {
 		return newStr;
 	}
 
+	// const리턴: 외부로 반환되어야 하는 sumStr가 지역적으로 선언되어있기 때문에 &없이, 즉 리턴될 때 복사되어야 함
 	const MyString MyString::operator + (const MyString& right) {
 		int sumCapacity = right.used + used;
 		MyString sumStr(sumCapacity);
@@ -86,6 +73,11 @@ namespace strPARK {
 			content[i] = right.content[i];
 		}
 
+		return *this;
+	}
+
+	MyString& MyString::operator += (const MyString& right) {
+		*this = *this + right;
 		return *this;
 	}
 
@@ -124,16 +116,12 @@ namespace strPARK {
 		return !(*this > right);
 	}
 
-	char& MyString::at(int index) {
+	char& MyString::operator [] (int index) {
 		if (index < 0 || index >= used) {
-			cout << "error on at()" << endl;
+			cout << "error on operator []" << endl;
 			exit(1);
 		}
 		return content[index];
-	}
-
-	char& MyString::operator [] (int index) {
-		return at(index);
 	}
 
 	MyString& MyString::insert(int loc, const MyString& str) {
@@ -181,8 +169,8 @@ namespace strPARK {
 			exit(1);
 		}
 
-		for (int i = 0; i < num; i++)
-			content[i + loc] = content[i + num];
+		for (int i = loc; i < used - loc; i++)
+			content[i] = content[i +  num];
 
 		used -= num;
 		return *this;
